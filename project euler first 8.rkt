@@ -20,3 +20,33 @@
       [(< n 4000000) (+ (if (even? n) n 0)
                         (sum-fibonacci j n))])))
 
+; Problem 6: Sum square difference
+
+(define (square-diff n)
+  (- (* (/ (* n (+ n 1)) 2) (/ (* n (+ n 1)) 2))
+     (sum-squares n)))
+
+(define (sum-squares n)
+  (cond
+    [(= n 1) 1]
+    [(> n 1) (+ (* n n)
+                (sum-squares (sub1 n)))]))
+
+; Problem 7: 10001st prime
+
+(define (find-prime n0)
+  (local [(define (find-prime/acc n primes-so-far)
+            (cond
+              [(= n n0) (first primes-so-far)]
+              [(< n n0) (find-prime/acc (add1 n)
+                                        (cons (next-prime primes-so-far)
+                                              primes-so-far))]))]
+    (find-prime/acc 1 '(2))))
+
+(define (next-prime lon)
+  (local [(define (next-prime/test t lon)
+            (cond
+              [(ormap (λ (n) (zero? (modulo t n))) lon) (next-prime/test (add1 t) lon)]
+              [else t]))]
+    (next-prime/test (add1 (first lon)) lon)))
+ 
